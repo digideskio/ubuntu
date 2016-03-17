@@ -1,0 +1,12 @@
+[Unit]
+Description=Automatically load /etc/ip4tables.rules
+Before=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/ip6tables-restore /etc/ip6tables.rules
+RemainAfterExit=no
+TimeoutSec=0
+
+[Install]
+RequiredBy=networking.service
