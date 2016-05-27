@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# --
+# EnvyGeeks only mirrors the latest Edge and the latest stable
+# Release, any other release is removed.
+# --
+
+lockfile="/tmp/alpine-mirror.lock"
+if [ -z "$flock" ]; then
+  exec env flock=1 flock -n $lockfile \
+    "$0" "$@"
+fi
+
+exclude="--exclude .latest.x86_64.txt --exclude .latest.x86.txt "
+exclude=$exclude"--exclude MIRRORS.txt --exclude **/armhf --exclude **/x86 --exclude v2.* "
+exclude=$exclude"--exclude v3.0 --exclude v3.1 --exclude v3.2 "
+
+src=rsync://rsync.alpinelinux.org/alpine/
+dest=/srv/docker/envygeeks/srv/nginx/mirror.envygeeks.io/alpine
+mkdir -p "$dest"
+
+/usr/bin/rsync \
+  --update \
+  --archive \
+  --hard-links \
+  --delay-updates \
+  --delete-after \
+  --timeout=600 \
+  --delete \
+  $exclude \
+  "$src" "$dest"
+
+chown -R 1000.1000 \
+  $dest
