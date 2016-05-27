@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+for bin in iptables ip6tables; do
+  "/sbin/$bin" -F
+  "/sbin/$bin" -X
+  "/sbin/$bin" -t nat -F
+  "/sbin/$bin" -t nat -X
+  "/sbin/$bin" -t mangle -F
+  "/sbin/$bin" -t mangle -X
+  "/sbin/$bin" -t raw -F
+  "/sbin/$bin" -t raw -X
+done
+
+/sbin/iptables-restore  < /etc/ip4tables.rules
+/sbin/ip6tables-restore < /etc/ip6tables.rules
+service restart docker
+service restart \
+  envygeeks
