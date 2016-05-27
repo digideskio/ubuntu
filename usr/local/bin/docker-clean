@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+imgs=$(docker images --filter='dangling=true' -q --no-trunc)
+inst=$(docker     ps --filter='status=exited' -q --no-trunc)
+[[ -n "$inst" ]] && docker rm  -f $inst 2>/dev/null
+[[ -n "$imgs" ]] && docker rmi -f $imgs 2>/dev/null
