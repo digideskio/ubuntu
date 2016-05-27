@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+# --
+# All of EnvyGeeks servers have a master compose.yml that starts
+# some system services, after that it's under Kubernetes control
+# --
+
+args = ARGV[0..ARGV.index { |v| v !~ %r!^-{1,2}! }]
+exec("/usr/local/bin/docker-compose.distrib", *ARGV) if args.size > 0 && args.include?("-f")
+exec("/usr/local/bin/docker-compose.distrib", "-f", "compose.yml", *ARGV) if File.file?("compose.yml")
+exec("/usr/local/bin/docker-compose.distrib", "-f", "/srv/docker/compose.yml", *ARGV) if File.file?("/srv/docker/compose.yml")
+exec("/usr/local/bin/docker-compose.distrib", "-f", "/etc/docker/compose.yml", *ARGV) if File.file?("/etc/docker/compose.yml")
+exec("/usr/local/bin/docker-compose.distrib", *ARGV)
