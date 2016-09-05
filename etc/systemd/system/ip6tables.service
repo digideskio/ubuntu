@@ -1,5 +1,5 @@
 [Unit]
-Description=Automatically load /etc/ip4tables.rules
+Description=Automatically load /etc/ip6tables.rules
 Before=network-pre.target
 
 [Service]
